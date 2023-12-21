@@ -5,7 +5,7 @@ This simple Python script allows users to download YouTube videos as MP3 or MP4 
 ## Requirements
 
 - Python 3.x
-- `youtube-download-cli`
+- `youtube-download-cli` (Will be downloaded automatically when the code is run)
 
 ## Installation
 
