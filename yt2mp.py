@@ -20,7 +20,7 @@ def download_urls_from_file(file_path, output_folder, format_choice):
                 with tqdm(desc=f"Downloading {url} as {format_choice.upper()}", unit="B", unit_scale=True) as progress_bar:
                     subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
                     progress_bar.update(1)
-                print(f"Downloaded {url} as {format_choice.upper()} with a progress bar.")
+                print(f"Downloaded {url} as {format_choice.upper()} succesfully.")
             except subprocess.CalledProcessError as e:
                 print(f"Failed to download {url} as {format_choice.upper()}: {e}")
 
