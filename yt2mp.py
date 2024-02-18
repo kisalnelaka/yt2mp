@@ -1,85 +1,59 @@
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.button import Button
-from kivy.uix.dropdown import DropDown
-from kivy.uix.label import Label
-from kivy.uix.progressbar import ProgressBar
-from kivy.properties import StringProperty
-from subprocess import run, CalledProcessError
+import subprocess
+import sys
+import os
+import time
 
-class DownloadButton(Button):
-    format = StringProperty()
+def check_install_youtube_download_cli():
+    try:
+        subprocess.run(["youtube-download-cli", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        print("youtube-download-cli is already installed.")
+    except subprocess.CalledProcessError:
+        install_youtube_download_cli()
 
-class DownloaderApp(App):
-    url_input = StringProperty()
-    output_folder = StringProperty()
-    selected_format = StringProperty()
-    download_progress = StringProperty("0%")
+def install_youtube_download_cli():
+    print("Installing youtube-download-cli...")
+    try:
+        subprocess.run([sys.executable, "-m", "pip", "install", "youtube-download-cli"], check=True)
+        print("youtube-download-cli installed successfully!")
+    except subprocess.CalledProcessError as e:
+        print(f"Failed to install youtube-download-cli: {e}")
+        sys.exit(1)
 
-    def build(self):
-        layout = BoxLayout(orientation="vertical", padding=20)
+def download_urls_from_file(file_path, output_folder, format_choice):
+    with open(file_path, 'r') as file:
+        urls = file.readlines()
+        urls = [url.strip() for url in urls if url.strip()]
 
-        # URL input
-        url_label = Label(text="Enter YouTube URL:")
-        self.url_input = TextInput(multiline=False)
-        layout.add_widget(url_label)
-        layout.add_widget(self.url_input)
-
-        # Output folder selection
-        output_label = Label(text="Output Folder:")
-        output_button = Button(text="Select Folder")
-        output_button.bind(on_press=self.open_filechooser)
-        layout.add_widget(output_label)
-        layout.add_widget(output_button)
-        self.output_folder = ""
-
-        # Format dropdown
-        format_label = Label(text="Format:")
-        format_dropdown = DropDown()
-        for format in ["mp3", "mp4"]:
-            btn = DownloadButton(text=format, format=format)
-            btn.bind(on_press=self.format_selected)
-            format_dropdown.add_widget(btn)
-        format_button = Button(text="Select Format")
-        format_button.bind(on_press=format_dropdown.open)
-        layout.add_widget(format_label)
-        layout.add_widget(format_button)
-
-        # Download button
-        download_button = Button(text="Download")
-        download_button.bind(on_press=self.download_video)
-        layout.add_widget(download_button)
-
-        # Progress bar
-        self.progress_bar = ProgressBar(max=100)
-        layout.add_widget(self.progress_bar)
-
-        return layout
-
-    def open_filechooser(self, instance):
-        # Implement filechooser using Kivy's FileChooser and update self.output_folder
-        pass
-
-    def format_selected(self, instance):
-        self.selected_format = instance.format
-
-    def download_video(self, instance):
-        if not all([self.url_input, self.output_folder, self.selected_format]):
-            print("Please fill in all fields.")
+        if not urls:
+            print("No URLs found in the file.")
             return
 
-        command = f'youtube-download-cli "{self.url_input}" {self.selected_format} -o "{self.output_folder}"'
+        for url in urls:
+            command = f'youtube-download-cli "{url}" {format_choice} -o "{output_folder}"'
+            try:
+                subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                print(f"Downloaded {url} as {format_choice.upper()}.")
+            except subprocess.CalledProcessError as e:
+                print(f"Failed to download {url} as {format_choice.upper()}: {e}")
 
-        try:
-            process = run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            output = process.stdout.decode("utf-8")
-            print(output)
-            # Update progress bar based on output (if possible)
-        except CalledProcessError as e:
-            print(f"Failed to download: {e}")
+file_name = input("Enter the name of the file containing the URLs: ")
+file_path = file_name.strip()
 
-        # Reset progress bar and UI state
+output_folder = "yt2media"
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+    print(f"Folder '{output_folder}' created successfully!")
 
-if __name__ == "__main__":
-    DownloaderApp().run()
+# Prompt the user to select the format
+while True:
+    format_choice = input("Enter 'mp3' or 'mp4' to specify the format to download: ").lower()
+    if format_choice in ['mp3', 'mp4']:
+        break
+    else:
+        print("Invalid format choice. Please enter 'mp3' or 'mp4'.")
+
+# Check and install youtube-download-cli if necessary
+check_install_youtube_download_cli()
+
+# Then continue with the rest of the script, specifying the output folder and format
+download_urls_from_file(file_path, output_folder, format_choice)
