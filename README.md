@@ -1,50 +1,51 @@
-# yt2mp
+# YouTube Downloader
 
-This simple Python script allows users to download YouTube videos as MP3 or MP4 files using the `youtube-download-cli` tool.
+A simple YouTube downloader script with a graphical user interface (GUI) built using Tkinter.
+
+## Features
+
+- Download YouTube videos or audio files from a list of URLs specified in a text file.
+- Choose between 'mp3' and 'mp4' formats.
+- Select the input file and output folder using a file browser.
+- Graphical user interface for a user-friendly experience.
 
 ## Requirements
 
+- [youtube-download-cli](https://pypi.org/project/youtube-download-cli/)
 - Python 3.x
-- `youtube-download-cli` (Will be downloaded automatically when the code is run)
 
 ## Installation
 
-1. Clone this repository:
+1. Install the required dependencies:
 
-    ```bash
-    git clone https://github.com/kisalnelaka/yt2mp.git
-    ```
+  
+   pip install youtube-download-cli
 
-2. Navigate to the project directory:
+2. Clone the repository:
 
-    ```bash
-    cd yt2mp
-    ```
+git clone https://github.com/kisalnelaka/yt2mp.git
+cd yt2mp
+3. Run the script:
+python yt2mp.py
 
-## Usage
+Usage
+Launch the application.
 
-1. Prepare a text file with YouTube video URLs, each on a new line.
+Browse and select the file containing the YouTube video URLs.
 
-2. Run the script:
+Browse and select the output folder for downloaded files.
 
-    ```bash
-    python yt2mp.py
-    ```
+Choose the desired format ('mp3' or 'mp4') using radio buttons.
 
-3. Enter the name of the file containing the URLs when prompted.
+Click the "Download" button to start the download process.
 
-4. Choose between downloading as MP3 or MP4 when prompted.
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Notes
+Acknowledgments
+Thanks to the developers of youtube-download-cli for providing a convenient command-line interface for downloading YouTube videos.
+Contributing
+If you'd like to contribute to this project, feel free to fork the repository and submit a pull request.
 
-- The downloaded files will be stored in the `yt2media` directory.
-- Ensure the video URLs provided in the file are valid YouTube links.
-
-## Disclaimer
-
-Respect copyright laws and YouTube's terms of service when downloading videos. This script is for educational purposes only.
-
----
-
-Feel free to contribute to this project by submitting issues or pull requests!
-
+Issues
+If you encounter any issues or have suggestions for improvements, please open an issue.

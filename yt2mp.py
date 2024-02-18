@@ -29,7 +29,7 @@ def download_urls_from_file(file_path, output_folder, format_choice):
 class YouTubeDownloaderGUI:
     def __init__(self, master):
         self.master = master
-        self.master.title("YouTube Downloader")
+        self.master.title("yt2mp")
 
         self.file_label = Label(master, text="Select the file containing the URLs:")
         self.file_label.pack()
